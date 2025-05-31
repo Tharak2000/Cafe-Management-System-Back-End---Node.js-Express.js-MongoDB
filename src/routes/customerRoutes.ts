@@ -26,20 +26,34 @@ router.get("/:id",async (req,res)=>{
         console.log(error);
         res.status(500).json({message:'Error retrueving customers' });
     }
-})
+});
 
-router.post("/register",(req,res)=>{
-    try{
-        console.log(req.body);
-        const customer = new Customer(req.body);
+// router.post("/register",(req,res)=>{
+//     try{
+//         console.log(req.body);
+//         const customer = new Customer(req.body);
 
-        customer.save()
-            .then(r => res.send(r))
-            .catch(e => res.send(e));
-    }catch (err){
-        console.log(err);
+//         customer.save()
+//             .then(r => res.send(r))
+//             .catch(e => res.send(e));
+//     }catch (err){
+//         console.log(err);
+//     }
+// });
+
+router.post('/register', async (req, res): Promise<void> => {
+    try {
+        const { name, email, telephone } = req.body;
+        const newCustomer = new Customer({ name, email, telephone });
+        await newCustomer.save();
+        res.status(201).json(newCustomer);
+    } catch (error) {
+        res.status(400).json({ message: 'Error creating customer' });
     }
 });
+
+
+
 
 router.put("/:id",async (req,res)=>{
     try{
